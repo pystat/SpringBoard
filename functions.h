@@ -1,3 +1,8 @@
+/**
+The functions.h file is a header file that contains all the functions that we
+are going to use and also gets imported into the functions.cpp and main.cpp
+files.
+*/
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
@@ -24,5 +29,8 @@ void loadGreyscale(Pixel image[MAX_ROWS][MAX_COLS],
 void outputImage(const Pixel image[MAX_ROWS][MAX_COLS], int rows, int cols, 
                     std::ostream& outData);
 int scaleValue(int value, int max, int min);
+int colorPath(const int elevations[MAX_ROWS][MAX_COLS], 
+					Pixel image[MAX_ROWS][MAX_COLS], int rows, 
+					int cols, Pixel color, int start_row);	
 
 #endif

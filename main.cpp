@@ -13,32 +13,56 @@ static Pixel image[MAX_ROWS][MAX_COLS];
 
 int main() {
 	ifstream inData;
-	ofstream outData;
-	int rows,cols;
+	int rows,cols,max,min;
 	string fileName; 
- 	int min=elevations[0][0];
-	int max=elevations[0][0];
 
+
+/**
+The statements below tests if appropriate values are entered for the amount of
+rows and columns
+*/
+	cout<<"Enter the number of rows : ";
 	cin>>rows;
-	if(!cin||rows<0){
-		cout << "Incorrect input" << endl;
+	if(!cin.good()|| rows<1){
+		cout <<"Error: Problem reading in rows and columns. "<< endl;
 		return 1;
 	}
+	cout<<"Enter the number of columns :";
 	cin>>cols;
-	if(!cin||cols<0){
-		cout << "Incorrect input" << endl;
+	if(!cin.good()||cols<1){
+		cout << "Error: Problem reading in rows and columns. " << endl;
 		return 1;
 	}
+
 	cin>>fileName;
 	inData.open(fileName);
-	if (!inData.is_open()) {
-		cout << "Could not open file" << endl;
+	if (!inData.is_open()) {//checks to see if the file was able to open
+		cout << "Error: Unable to open file <"<<fileName<<">" << endl;
 		return 1;
 	}
 
-	
+	//loads elevation array with integers
 	loadData(elevations,rows,cols,inData);
+	//the max and min of array is calculated
 	findMaxMin(elevations,rows,cols,max,min);
+	//elelvation values are converted to RGB values in the Pixel array
 	loadGreyscale(image, elevations, rows, cols, max, min);
+
+	Pixel colR = {252,25,63};
+	Pixel colG = {31,253,13};
+	int path=0;
+	int firstDist=colorPath(elevations,image, rows, cols, colR,0);
+	for(int i=0;i<rows;i++){
+		int total=colorPath(elevations,image, rows, cols, colR,i);
+		if(total<firstDist){
+			firstDist=total;
+			path=i;
+		}
+	}
+	colorPath(elevations,image, rows, cols, colG,path);
+
+	ofstream outData;//ofstream variable declared here
+	outData.open(fileName+".ppm");//ofstream opens the file 
+	//writes to our ppm file supplying the write info in a given format
 	outputImage(image, rows, cols, outData);
 }
